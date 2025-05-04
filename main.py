@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from firebase_funcs import set_ECG, set_humidity, set_temperature, set_bpm, get_direction
+from firebase_funcs import set_ECG, set_humidity, set_temperature, set_bpm, get_direction, update_all
 from dotenv import load_dotenv
 
 # load_dotenv("/etc/secrets/")
@@ -19,6 +19,12 @@ app.add_middleware(
 
 class Data(BaseModel):
     data: int
+
+class AllData(BaseModel):
+    temperature: int
+    humidity: int
+    ecg: int
+    bpm: int
 
 @app.get("/")
 async def root():
@@ -49,5 +55,10 @@ async def set_bpm(data: Data):
 @app.get("/get-robot-direction")
 async def get_robot_direction():
     direction = await get_direction()
-    print(direction)
     return {"direction": direction}
+
+
+@app.post("/update-all-values")
+async def update_all_values(data: AllData):
+    update_all(data.temperature, data.humidity, data.ecg, data.bpm)
+    return {"message": "all values updated"}

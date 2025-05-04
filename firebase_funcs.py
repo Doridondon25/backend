@@ -34,3 +34,12 @@ def set_temperature(temperature):
 async def get_direction():
     direction = directionRef.get()
     return direction
+
+
+def update_all(temperature, humidity, ecg, bpm):
+    commands_ref.update({
+        "temperature": temperature,
+        "humidity": humidity,
+        "ECG": {'average_ecg': ecg},
+        "BPM": {'average_bpm': bpm}
+    })
