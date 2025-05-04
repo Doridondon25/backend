@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from firebase_funcs import set_ECG, set_humidity, set_temperature, set_bpm
+from firebase_funcs import set_ECG, set_humidity, set_temperature, set_bpm, get_direction
 from dotenv import load_dotenv
 
 # load_dotenv("/etc/secrets/")
@@ -45,3 +45,9 @@ async def set_bpm(data: Data):
     set_bpm(data.data)
     return {"message": "bpm set"}
 
+
+@app.get("/get-robot-direction")
+async def get_robot_direction():
+    direction = await get_direction()
+    print(direction)
+    return {"direction": direction}

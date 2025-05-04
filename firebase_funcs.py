@@ -12,8 +12,9 @@ firebase_admin.initialize_app(cred, {
 commands_ref = db.reference('/commands')
 bpm_ref = commands_ref.child('BPM')
 ECG_ref = commands_ref.child('ECG')
-humidity_ref = commands_ref.child('humidity')
-temperature_ref = commands_ref.child('temperature')
+directionRef = commands_ref.child('Drive').child('command')
+
+
 
 def set_bpm(bpm):
     bpm_ref.set({
@@ -24,8 +25,12 @@ def set_ECG(ecg):
     ECG_ref.set({'average_ecg': ecg})
 
 def set_humidity(humidity):
-    humidity_ref.set(humidity)
+    commands_ref.update({"humidity": humidity})
 
 def set_temperature(temperature):
-    temperature_ref.set(temperature)
+    commands_ref.update({"temperature": temperature})
 
+
+async def get_direction():
+    direction = directionRef.get()
+    return direction
